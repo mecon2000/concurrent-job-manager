@@ -6,6 +6,8 @@ import { JobStorageService } from './JobStorageService';
 import { config } from '../config';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import psList, { ProcessDescriptor } from 'ps-list';
+import fkill from 'fkill';
 
 const execAsync = promisify(exec);
 
@@ -30,14 +32,8 @@ export class JobManagerService {
         if (runningJobs.length === 0) return;
 
         try {
-            // Get all running processes once
-            const { stdout } = await execAsync('tasklist /FO CSV /NH');
-            const runningProcesses = stdout.split('\n')
-                .map(line => {
-                    const [name, pid] = line.split(',').map(s => s.replace(/"/g, ''));
-                    return { name, pid: parseInt(pid) };
-                });
-
+            // Get all running processes using ps-list
+            const runningProcesses: ProcessDescriptor[] = await psList();
             const now = Date.now();
 
             // Check each running job against the process list
@@ -54,14 +50,10 @@ export class JobManagerService {
                     continue;
                 }
 
-                // TODO: while today it's not a must to use taskkill, 
-                // In a future version we'll use it to handle processes
-                // spawned by previous instances of the manager (e.g., after upgrades
-                // or unexpected terminations). this is why i'm using it now.
                 const processObj = {
                     connected: true,
                     pid: process.pid,
-                    kill: () => execAsync(`taskkill /PID ${process.pid} /F`)
+                    kill: () => fkill(process.pid, { force: true })
                 } as unknown as ChildProcess;
 
                 if (!processObj.connected) {
