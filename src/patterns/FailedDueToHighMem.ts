@@ -1,29 +1,33 @@
 import { Job } from '../types/Job';
-import { Pattern, PatternSuccessRatesResult } from '../types/Pattern';
+import { Pattern, PatternBucketsResult } from '../types/Pattern';
 import { config } from '../config';
+
+export type HighMemFailure = { jobName: string; highestMem: number | undefined };
 
 export class FailedDueToHighMem implements Pattern {
   readonly name = 'Memory is too high';
   readonly description = `Checks if process failed AND had more then ${config.memory.maxAllowedMB}MB memory consumption at some point`;
 
-  calc(jobs: Job[], overallSuccessRate: number): PatternSuccessRatesResult {
+  calc(jobs: Job[], overallSuccessRate: number): PatternBucketsResult {
     const maxAllowedBytes = config.memory.maxAllowedMB * 1024 * 1024; // Convert MB to bytes
-    const matchingJobs = jobs.filter(job =>  
-      job.highestMem !== undefined && 
+    const failedHighMemJobs = jobs.filter(job =>
+      job.status === 'failed' &&
+      job.highestMem !== undefined &&
       job.highestMem > maxAllowedBytes
     );
 
-    const matchCount = matchingJobs.length;
-    const successRate = matchCount > 0 
-      ? (matchingJobs.filter(job => job.status !== 'failed').length / matchCount)
-      : 0;
-    const difference = ((successRate - overallSuccessRate) / overallSuccessRate) * 100;
+    // Sort by highestMem descending
+    const sorted = failedHighMemJobs.sort((a, b) => (b.highestMem || 0) - (a.highestMem || 0));
+
+    // Map to array of strings: 'jobName (highestMem MB)'
+    const mostFailures = sorted.map(job => {
+      const mb = job.highestMem ? (job.highestMem / 1024 / 1024).toFixed(0) : 'N/A';
+      return `${job.name} (${mb} MB)`;
+    });
 
     return {
       name: this.name,
-      matchCount,
-      successRate: `${(successRate*100).toFixed(0)}%`,
-      differenceFromAverage: `${difference >= 0 ? '+' : ''}${difference.toFixed(0)}%`
+      mostFailures
     };
   }
 } 

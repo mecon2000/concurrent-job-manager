@@ -201,7 +201,14 @@ export class JobManagerService {
             status: 'running' as JobStatus,
             startTime: timestamp,
             failureReason: FailureReason.NONE,
-            failureDetails: undefined
+            failureDetails: undefined,
+            highestMem: undefined,
+            averageMem: undefined,
+            endTime: undefined,
+            duration: undefined,
+            exitCode: undefined,
+            pid: undefined,
+            hourOfDay: Math.floor(Math.random() * 24),         // TODO: Mock hour of day for testing. Replace with actual hour from timestamp
         };
 
         this.storage.addJob(retryJob);
