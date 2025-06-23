@@ -1,10 +1,10 @@
-import { Job } from '../types';
+import { Job } from '../types/Job';
 import { Pattern, PatternSuccessRatesResult } from '../types/Pattern';
 import { config } from '../config';
 
 export class FailedDueToHighMem implements Pattern {
   readonly name = 'Memory is too high';
-  readonly description = 'Checks if process failed AND had high memory consumption at some point';
+  readonly description = `Checks if process failed AND had more then ${config.memory.maxAllowedMB}MB memory consumption at some point`;
 
   calc(jobs: Job[], overallSuccessRate: number): PatternSuccessRatesResult {
     const maxAllowedBytes = config.memory.maxAllowedMB * 1024 * 1024; // Convert MB to bytes

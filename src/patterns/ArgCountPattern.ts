@@ -1,10 +1,10 @@
-import { Job } from '../types';
+import { Job } from '../types/Job';
 import { Pattern, PatternSuccessRatesResult } from '../types/Pattern';
 
 export class ArgCountPattern implements Pattern {
-  readonly name = 'Job has more than 2 arguments';
-  readonly description = 'Checks if job has more than 2 arguments';
   readonly threshold = 2;
+  readonly name = `Job has more than ${this.threshold} arguments`;
+  readonly description = `Checks if job has more than ${this.threshold} arguments`;
 
   calc(jobs: Job[], overallSuccessRate: number): PatternSuccessRatesResult {
     const matchingJobs = jobs.filter(job => job.args.length > this.threshold);

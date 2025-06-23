@@ -1,5 +1,5 @@
 import { spawn, ChildProcess } from 'child_process';
-import { Job, FailureReason, JobStatus } from '../types';
+import { Job, FailureReason, JobStatus } from '../types/Job';
 import path from 'path';
 import fs from 'fs';
 import { JobStorageService } from './JobStorageService';

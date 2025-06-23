@@ -1,4 +1,4 @@
-import { Job } from '../types';
+import { Job } from './Job';
 
 export interface PatternResult {
     name: string;

@@ -1,4 +1,4 @@
-import { Job, FailureReason } from '../types';
+import { Job, FailureReason } from '../types/Job';
 
 export class JobStorageService {
   private jobs: Map<string, Job> = new Map();

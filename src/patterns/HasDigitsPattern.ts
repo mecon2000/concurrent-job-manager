@@ -1,4 +1,4 @@
-import { Job } from '../types';
+import { Job } from '../types/Job';
 import { Pattern, PatternSuccessRatesResult } from '../types/Pattern';
 
 export class HasDigitsPattern implements Pattern {
@@ -15,7 +15,7 @@ export class HasDigitsPattern implements Pattern {
     return {
       name: this.name,
       matchCount,
-      successRate: `${(successRate*100).toFixed(0)}%`,
+      successRate: `${(successRate * 100).toFixed(0)}%`,
       differenceFromAverage: `${difference >= 0 ? '+' : ''}${difference.toFixed(0)}%`
     };
   }

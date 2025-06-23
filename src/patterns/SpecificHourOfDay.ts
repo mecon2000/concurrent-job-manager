@@ -1,4 +1,4 @@
-import { Job } from '../types';
+import { Job } from '../types/Job';
 import { Pattern, PatternBucketsResult } from '../types/Pattern';
 
 export class SpecificHourOfDay implements Pattern {

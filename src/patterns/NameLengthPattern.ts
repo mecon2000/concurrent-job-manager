@@ -1,10 +1,10 @@
-import { Job } from '../types';
+import { Job } from '../types/Job';
 import { Pattern, PatternSuccessRatesResult } from '../types/Pattern';
 
 export class NameLengthPattern implements Pattern {
-  readonly name = 'Job name length > 10';
-  readonly description = 'Checks if job name length exceeds 10 characters';
   readonly threshold = 10;
+  readonly name = `Job name length > ${this.threshold}`;
+  readonly description = `Checks if job name length exceeds ${this.threshold} characters`;
 
   calc(jobs: Job[], overallSuccessRate: number): PatternSuccessRatesResult {
     const matchingJobs = jobs.filter(job => job.name.length > this.threshold);

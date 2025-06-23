@@ -1,4 +1,4 @@
-import { Job } from '../types';
+import { Job } from '../types/Job';
 import { Pattern } from '../types/Pattern';
 import { NameLengthPattern, HasDigitsPattern, ArgCountPattern, FailedDueToHighMem, SpecificHourOfDay, ProcessesPronedToFail } from '../patterns';
 
